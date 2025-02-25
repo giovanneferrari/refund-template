@@ -51,9 +51,32 @@ form.addEventListener("submit", (event) => {
         created_at: new Date(),
     }
 
-    console.log(newExpense);
+    // Chama a função que irá adicionar o item na lista.
+    expenseAdd(newExpense);
 
 });
+
+function expenseAdd(newExpense) {
+    try {
+
+        // Cria o elemento da despesa.
+        const expenseItem = document.createElement("li");
+
+        // Adiciona a classe ao elemento da despesa.
+        expenseItem.classList.add("expense");
+
+        const expenseImg = document.createElement("img");
+        expenseImg.src = `./img/${newExpense.category_id}.svg`;
+        expenseImg.alt = "Imagem da despesa";
+        expense.classList.add("expense-img");
+
+
+
+    } catch (error) {
+        alert("Não foi possível atualizar a lista de despesas.")
+        console.log(error)
+    }
+}
 
 
 

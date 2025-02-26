@@ -2,23 +2,12 @@ const amount = document.getElementById("amount");
 const expense = document.getElementById("expense");
 const category = document.getElementById("category");
 const form = document.querySelector('form');
-
-let contDespesas = document.querySelector("header span");
+const contDespesas = document.querySelector("header span");
 let counter = 0;
-let buttonAdd = document.querySelector("form button");
 
-let categoryExpense = document.querySelector('select');
+const categoryExpense = document.querySelector('select');
 
-let moneyCount2 = document.getElementsByClassName('expense-amount');
-let moneyCount = document.querySelector('aside header h2')
-
-// console.log(moneyCount.innerText);
-
-// buttonAdd.addEventListener("click", (event) => {
-//     event.preventDefault();
-//     counter++;
-//     contDespesas.innerHTML = `${counter} despesas`;
-// });
+const moneyCount = document.querySelector('aside header h2');
 
 // Captura o evento de input para formatar o valor.
 amount.addEventListener("input", () => {
@@ -53,28 +42,71 @@ form.addEventListener("submit", (event) => {
 
     // Chama a função que irá adicionar o item na lista.
     expenseAdd(newExpense);
+    counterExpense(newExpense);
+
+    // Limpa o formulário.
+    expense.value = "";
+    category.value = "";
+    amount.value = "";
 
 });
 
 function expenseAdd(newExpense) {
     try {
 
-        // Cria o elemento da despesa.
+        // Cria os elementos da despesa.
+        const expenseContainer = document.querySelector("aside ul");
         const expenseItem = document.createElement("li");
-
-        // Adiciona a classe ao elemento da despesa.
-        expenseItem.classList.add("expense");
-
         const expenseImg = document.createElement("img");
-        expenseImg.src = `./img/${newExpense.category_id}.svg`;
-        expenseImg.alt = "Imagem da despesa";
-        expense.classList.add("expense-img");
+        const expenseDeleteImg = document.createElement("img");
+        const expenseTextContainer = document.createElement("div");
+        const expenseTitle = document.createElement("strong");
+        const expenseDescription = document.createElement("span");
+        const expenseAmount = document.createElement("span");
 
+        expenseImg.src = `./img/${newExpense.category_id}.svg`;
+        expenseTitle.innerHTML = newExpense.expense;
+        expenseDescription.innerHTML = newExpense.category_name;
+        expenseAmount.innerHTML = newExpense.amount;
+        expenseDeleteImg.src = "./img/remove.svg";
+
+        expenseTextContainer.appendChild(expenseTitle);
+        expenseTextContainer.appendChild(expenseDescription);
+        expenseItem.appendChild(expenseImg);
+        expenseItem.appendChild(expenseTextContainer);
+        expenseItem.appendChild(expenseAmount);
+        expenseContainer.appendChild(expenseItem);
+        expenseItem.appendChild(expenseDeleteImg);
+
+        // Adiciona as classes aos elementos da despesa.
+        expenseItem.classList.add("expense");
+        expenseTextContainer.classList.add("expense-info");
+        expenseAmount.classList.add("expense-amount");
+        expenseDeleteImg.classList.add("remove-icon");
 
 
     } catch (error) {
         alert("Não foi possível atualizar a lista de despesas.")
         console.log(error)
+    }
+}
+
+// Parei aqui, pois não consegui somar os valores de acordo com cada input.
+function counterExpense(newExpense) {
+    if (counter < 1) {
+        counter++;
+        contDespesas.innerHTML = `${counter} despesa`;
+        moneyCount.textContent = newExpense.amount;
+        console.log(newExpense.amount);
+        console.log(typeof newExpense.amount);
+
+    } else {
+    counter++;
+    contDespesas.innerHTML = `${counter} despesas`;
+    newExpense.amount++;
+    console.log(newExpense.amount);
+    console.log(typeof newExpense.amount);
+    moneyCount.textContent = newExpense.amount;
     }
 }
 

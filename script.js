@@ -43,6 +43,7 @@ form.addEventListener("submit", (event) => {
     // Chama a função que irá adicionar o item na lista.
     expenseAdd(newExpense);
     counterExpense(newExpense);
+    removeExpense(event);
 
     // Limpa o formulário.
     expense.value = "";
@@ -84,6 +85,10 @@ function expenseAdd(newExpense) {
         expenseAmount.classList.add("expense-amount");
         expenseDeleteImg.classList.add("remove-icon");
 
+        expenseDeleteImg.addEventListener("click", (expenseItem) => {
+            removeExpense(expenseItem);
+        })
+
 
     } catch (error) {
         alert("Não foi possível atualizar a lista de despesas.")
@@ -103,11 +108,16 @@ function counterExpense(newExpense) {
     } else {
     counter++;
     contDespesas.innerHTML = `${counter} despesas`;
-    newExpense.amount++;
     console.log(newExpense.amount);
     console.log(typeof newExpense.amount);
-    moneyCount.textContent = newExpense.amount;
+    moneyCount.textContent = parseFloat(newExpense.amount++);
     }
+}
+
+function removeExpense(expenseItem) {
+    expenseItem.remove
+    counter--;
+    contDespesas.innerHTML = `${counter} despesas`;
 }
 
 

@@ -3,7 +3,7 @@ const expense = document.getElementById("expense");
 const category = document.getElementById("category");
 const form = document.querySelector('form');
 const contDespesas = document.querySelector("header span");
-let counter = 0;
+const expenseContainer = document.querySelector("aside ul");
 
 const categoryExpense = document.querySelector('select');
 
@@ -42,7 +42,6 @@ form.addEventListener("submit", (event) => {
 
     // Chama a função que irá adicionar o item na lista.
     expenseAdd(newExpense);
-    counterExpense(newExpense);
     removeExpense(event);
 
     // Limpa o formulário.
@@ -56,7 +55,6 @@ function expenseAdd(newExpense) {
     try {
 
         // Cria os elementos da despesa.
-        const expenseContainer = document.querySelector("aside ul");
         const expenseItem = document.createElement("li");
         const expenseImg = document.createElement("img");
         const expenseDeleteImg = document.createElement("img");
@@ -68,7 +66,7 @@ function expenseAdd(newExpense) {
         expenseImg.src = `./img/${newExpense.category_id}.svg`;
         expenseTitle.innerHTML = newExpense.expense;
         expenseDescription.innerHTML = newExpense.category_name;
-        expenseAmount.innerHTML = newExpense.amount;
+        expenseAmount.innerHTML = `<small>R$</small>${newExpense.amount.toUpperCase().replace('R$', '')}`;
         expenseDeleteImg.src = "./img/remove.svg";
 
         expenseTextContainer.appendChild(expenseTitle);
@@ -89,6 +87,8 @@ function expenseAdd(newExpense) {
             removeExpense(expenseItem);
         })
 
+        // Atualiza os totais.
+        counterExpense();
 
     } catch (error) {
         alert("Não foi possível atualizar a lista de despesas.")
@@ -97,27 +97,28 @@ function expenseAdd(newExpense) {
 }
 
 // Parei aqui, pois não consegui somar os valores de acordo com cada input.
-function counterExpense(newExpense) {
-    if (counter < 1) {
-        counter++;
-        contDespesas.innerHTML = `${counter} despesa`;
-        moneyCount.textContent = newExpense.amount;
-        console.log(newExpense.amount);
-        console.log(typeof newExpense.amount);
+function counterExpense() {
+    try {
+        const items = expenseContainer.children;
+        contDespesas.textContent = `${items.length} ${items.length > 1 ? "despesas" : "despesa"}`;
 
-    } else {
-    counter++;
-    contDespesas.innerHTML = `${counter} despesas`;
-    console.log(newExpense.amount);
-    console.log(typeof newExpense.amount);
-    moneyCount.textContent = parseFloat(newExpense.amount++);
+        let total = 0;
+
+        for (let i = 0; i < items.length; i++) {
+            const expenseItem = items[i];
+            const expenseAmount = expenseItem.querySelector(".expense-amount");
+            total += Number(expenseAmount.textContent.replace("R$", "").replace(",", "."));
+        }
+        
+        moneyCount.textContent = formatCurrency(total);
+    } catch (error) {
+        alert("Não foi possível atualizar a lista de despesas.")
+        console.log(error)
     }
 }
 
 function removeExpense(expenseItem) {
     expenseItem.remove
-    counter--;
-    contDespesas.innerHTML = `${counter} despesas`;
 }
 
 

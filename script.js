@@ -42,13 +42,9 @@ form.addEventListener("submit", (event) => {
 
     // Chama a função que irá adicionar o item na lista.
     expenseAdd(newExpense);
-    removeExpense(event);
 
-    // Limpa o formulário.
-    expense.value = "";
-    category.value = "";
-    amount.value = "";
-
+    // Limpa os campos do formulário.
+    cleanData();
 });
 
 function expenseAdd(newExpense) {
@@ -84,7 +80,8 @@ function expenseAdd(newExpense) {
         expenseDeleteImg.classList.add("remove-icon");
 
         expenseDeleteImg.addEventListener("click", (expenseItem) => {
-            removeExpense(expenseItem);
+            expenseItem = expenseItem.target.parentElement.remove();
+            counterExpense();
         })
 
         // Atualiza os totais.
@@ -99,26 +96,38 @@ function expenseAdd(newExpense) {
 // Parei aqui, pois não consegui somar os valores de acordo com cada input.
 function counterExpense() {
     try {
+        // Armazena todos os itens da lista de despesas.
         const items = expenseContainer.children;
+        // Regra para apresentar textos diferentes de acordo com a quantidade de despesas.
         contDespesas.textContent = `${items.length} ${items.length > 1 ? "despesas" : "despesa"}`;
 
+        // Variável para armazenar o total das despesas.
         let total = 0;
 
+        // Loop para processar os valores de cada despesa.
         for (let i = 0; i < items.length; i++) {
             const expenseItem = items[i];
             const expenseAmount = expenseItem.querySelector(".expense-amount");
             total += Number(expenseAmount.textContent.replace("R$", "").replace(",", "."));
         }
+
+        // Apresentar o valor final após rodar a função de conversão.
+        moneyCount.innerHTML = `<small>R$</small>${formatCurrency(total).replace("R$", "")}`;
         
-        moneyCount.textContent = formatCurrency(total);
+
     } catch (error) {
         alert("Não foi possível atualizar a lista de despesas.")
         console.log(error)
     }
 }
 
-function removeExpense(expenseItem) {
-    expenseItem.remove
+function cleanData() {
+    // Limpa o formulário.
+    expense.value = "";
+    category.value = "";
+    amount.value = "";
+
+    expense.focus();
 }
 
 
